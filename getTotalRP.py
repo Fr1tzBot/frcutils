@@ -1,11 +1,14 @@
-import requests
-import json
+"""Gets the total Ranking Points for a given event."""
+
 from sys import argv
+import json
+import requests
 argv = argv[1:]
 with open(".apiKey", "r") as f:
     apiKey = f.readlines()[0].strip()
 
 def apiCall(suffix: str) -> str:
+    """Makes an API call to The Blue Alliance."""
     headers = {'X-TBA-Auth-Key': apiKey}
     base = "https://www.thebluealliance.com/api/v3/"
     return requests.get(base + suffix, headers=headers).text
