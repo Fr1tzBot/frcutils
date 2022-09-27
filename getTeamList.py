@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.10
-"""Ported team.sh to python"""
+"""Ported getTeamList.sh to python"""
 import json
 from sys import argv
 import requests
