@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Gets the total Ranking Points for a given event."""
 
 from sys import argv

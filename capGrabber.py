@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """grabs the average number of cap banners for each year at and event and averages them"""
 from sys import argv
 import json

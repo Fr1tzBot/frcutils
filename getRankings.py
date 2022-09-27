@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Get rankings from TBA and print them in a CSV format."""
 import json
 from sys import argv

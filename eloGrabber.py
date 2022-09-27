@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """analyzes the elo of an event over time"""
 from sys import argv
 import json
