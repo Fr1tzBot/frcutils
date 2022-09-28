@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.10
+#!/usr/bin/env python3
 """Ported getWinLoss.py to python"""
 import json
 from sys import argv
@@ -6,7 +6,6 @@ import requests
 argv = argv[1:]
 with open(".apiKey", "r") as f:
     apiKey = f.readlines()[0].strip()
-
 
 def apiCall(suffix: str) -> str:
     headers = {'X-TBA-Auth-Key': apiKey}
@@ -20,14 +19,11 @@ def combineRecord(data: dict) -> str:
     t = 0
     for i in data.keys():
         for k in ["playoff", "qual"]:
-            if k == "qual":
-                l += data[i][k]["ranking"]["record"]["losses"]
-                w += data[i][k]["ranking"]["record"]["wins"]
-                t += data[i][k]["ranking"]["record"]["ties"]
-            else:
-                l += data[i][k]["record"]["losses"]
-                w += data[i][k]["record"]["wins"]
-                t += data[i][k]["record"]["ties"]
+            j = data[i][k]["ranking"] if k == "qual" else data[i][k]
+            j = j["record"]
+            l += j["losses"]
+            w += j["wins"]
+            t += j["ties"]
     return f"{w}-{l}-{t}"
 
 print(combineRecord(json.loads(apiCall("/team/frc862/events/2022/statuses"))))
