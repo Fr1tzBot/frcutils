@@ -35,7 +35,7 @@ function refresh() {
             return raw[0].elo_recent;
         }
         catch(TypeError) {
-            return 1500 //default elo
+            return 1500
         }
     }
 
@@ -75,10 +75,15 @@ function refresh() {
 
     //iterate through team list
     var teamList = getTeamList(eventKey)
+    if (!teamList.includes(862)) {
+      teamList.push(862)
+    }
     for(var i=0;i<teamList.length;i++) {
         var data = [[teamList[i], getTeamName(teamList[i]), getRecentElo(teamList[i]), getChairmansCount(teamList[i]), getTotalBanners(teamList[i])]];
         Logger.log(i+3)
         spreadsheet.getRange("A" + (i+3) + ":E" + (i+3)).setValues(data);
     }
+    var date = Utilities.formatDate(new Date(), "GMT-4", "MM/dd/yyyy HH:mm")
+    spreadsheet.getRange('F1:F1').setValue(date)
 
 };
