@@ -13,5 +13,6 @@ def apiCall(suffix: str) -> str:
     url = base + suffix
     return requests.get(url, headers=headers).text
 
-print(json.loads(apiCall("team/frc" + argv[0]))["nickname"])
+for i in argv:
+    print(json.loads(apiCall("team/frc" + i))["nickname"])
 
