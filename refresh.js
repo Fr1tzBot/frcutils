@@ -75,7 +75,9 @@ function refresh() {
 
     //iterate through team list
     var teamList = getTeamList(eventKey)
-    if (!teamList.includes(862)) {
+    Logger.log(teamList)
+    Logger.log(Boolean((!teamList.includes("862"))))
+    if (!teamList.includes("862")) {
       teamList.push(862)
     }
     for(var i=0;i<teamList.length;i++) {
