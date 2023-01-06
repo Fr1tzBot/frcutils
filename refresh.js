@@ -32,10 +32,10 @@ function refresh() {
   function getRecentElo(teamNumber) {
     try {
       raw = stbCall("team/" + teamNumber);
-      return raw[0].elo_recent;
+      return [raw[0].elo_recent, raw[0].elo];
     }
     catch(TypeError) {
-      return 1500
+      return [1500, 1500];
     }
   }
 
@@ -73,8 +73,8 @@ function refresh() {
 
   // setup
   var spreadsheet = SpreadsheetApp.getActive();
-  spreadsheet.getRange('A3:E').clearContent();
-  var eventKey = spreadsheet.getRange('C1:C1').getValue()
+  spreadsheet.getRange('A3:F').clearContent();
+  var eventKey = spreadsheet.getRange('C1:D1').getValue()
 
   //iterate through team list
   var teamList = getTeamList(eventKey);
@@ -96,15 +96,15 @@ function refresh() {
   Promise.all(promises).then(elo => {
     Promise.all(promises0).then(awards => {
       for (var i = 0; i < teamList[0].length; i++) {
-        var data = [[teamList[0][i], teamList[1][i], elo[i], awards[i][1], awards[i][0]]];
+        var data = [[teamList[0][i], teamList[1][i], elo[i][0], elo[i][1], awards[i][1], awards[i][0]]];
         Logger.log(i + 3)
-        spreadsheet.getRange("A" + (i + 3) + ":E" + (i + 3)).setValues(data);
+        spreadsheet.getRange("A" + (i + 3) + ":F" + (i + 3)).setValues(data);
       }
     });
   });
 
   var date = Utilities.formatDate(new Date(), "GMT-4", "MM/dd/yyyy HH:mm")
-  spreadsheet.getRange('F1:F1').setValue(date)
+  spreadsheet.getRange('G1:G1').setValue(date)
 
 };
 
