@@ -1,6 +1,6 @@
 function refresh() {
   var TBA_STRING = "https://www.thebluealliance.com/api/v3/";
-  var STB_STRING = "https://api.statbotics.io/v1/";
+  var STB_STRING = "https://api.statbotics.io/v2/";
 
   function tbaCall(suffix) {
     var options = {
@@ -29,14 +29,15 @@ function refresh() {
   }
 
 
-  function getRecentElo(teamNumber) {
-    try {
+  function getRecentEpa(teamNumber) {
       raw = stbCall("team/" + teamNumber);
-      return [raw[0].elo_recent, raw[0].elo];
-    }
-    catch(TypeError) {
-      return [1500, 1500];
-    }
+      if (raw.norm_epa == null) {
+        raw.norm_epa = 1500
+      }
+      if (raw.norm_epa_recent == null) {
+        raw.norm_epa_recent = 1500
+      }
+      return [Number(raw.norm_epa_recent), Number(raw.norm_epa)];
   }
 
   function getAwards(teamNumber) {
@@ -55,10 +56,10 @@ function refresh() {
     return [bannerCount, chairmanCount];
   }
 
-  function getElo(teamNumber) {
+  function getEpa(teamNumber) {
     return new Promise((resolve, reject) => {
       try {
-        resolve(getRecentElo(teamNumber));
+        resolve(getRecentEpa(teamNumber));
       } catch (err) {
         reject(err);
       }
@@ -67,14 +68,14 @@ function refresh() {
   //Columns:
   //team number (pulled from event list, TBA)
   //team name (pulled from team info, TBA)
-  //team recent elo (pulled from team stats, STB)
+  //team recent epa (pulled from team stats, STB)
   //team chairman's banners (pulled from team awards, TBA)
   //team total banners (pulled from team awards, TBA)
 
   // setup
   var spreadsheet = SpreadsheetApp.getActive();
   spreadsheet.getRange('A3:F').clearContent();
-  var eventKey = spreadsheet.getRange('C1:D1').getValue()
+  var eventKey = spreadsheet.getRange('C1:C1').getValue()
 
   //iterate through team list
   var teamList = getTeamList(eventKey);
@@ -90,13 +91,13 @@ function refresh() {
   let promises = [];
   let promises0 = []
   teamList[0].map((team) => {
-    promises.push(getElo(team))
+    promises.push(getEpa(team))
     promises0.push(getAwards(team))
   });
-  Promise.all(promises).then(elo => {
+  Promise.all(promises).then(epa => {
     Promise.all(promises0).then(awards => {
       for (var i = 0; i < teamList[0].length; i++) {
-        var data = [[teamList[0][i], teamList[1][i], elo[i][0], elo[i][1], awards[i][1], awards[i][0]]];
+        var data = [[teamList[0][i], teamList[1][i], epa[i][0], epa[i][1], awards[i][1], awards[i][0]]];
         Logger.log(i + 3)
         spreadsheet.getRange("A" + (i + 3) + ":F" + (i + 3)).setValues(data);
       }
@@ -107,4 +108,3 @@ function refresh() {
   spreadsheet.getRange('G1:G1').setValue(date)
 
 };
-
