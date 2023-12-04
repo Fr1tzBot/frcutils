@@ -202,13 +202,19 @@ while True:
         print("Exiting...")
         break
 
+    #remove leading zeros
+    while code[0] == "0":
+        code = code[1:]
+
     if checkCode(code):
         print("Item found!")
         item = readItem(code)
         print(item)
         qty = input("Enter new quantity: ")
-        if qty[0] in ["+", "-"]:
+        if qty[0] == "+":
             qty = str(int(qty[1:]) + int(item.quantity))
+        elif qty[0] == "-":
+            qty = str(int(item.quantity) - int(qty[1:]))
         setQty(code, str(int(qty)))
     else:
         print("Item not found in database")
