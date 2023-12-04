@@ -23,6 +23,22 @@ while True:
 
     if checkItem(code):
         print("Item found!")
+        #get item info from database
+        with open(DATABASE) as f:
+            for line in f:
+                if code in line:
+                    item = line.split(", ")
+                    name = item[3]
+                    category = item[4]
+                    description = item[5]
+                    quantity = item[6]
+                    container = item[7]
+                    print(f"Name: {name}")
+                    print(f"Category: {category}")
+                    print(f"Description: {description}")
+                    print(f"Quantity: {quantity}")
+                    print(f"Container: {container}")
+                    break
     else:
         print("Item not found in database")
         name = input("Enter name: ")
