@@ -82,7 +82,7 @@ class Item:
     def __hash__(self):
         return hash(self.code)
 
-def checkItem(code: str) -> bool:
+def checkCode(code: str) -> bool:
     try:
         service = build("sheets", "v4", credentials=creds)
 
@@ -100,8 +100,7 @@ def checkItem(code: str) -> bool:
             return False
         
         for i in values:
-            print(i)
-            if code == i[0]:
+            if code == str(i[0]):
                 return True
     except HttpError as err:
         print(err)
@@ -190,21 +189,27 @@ def setQty(code: str, qty: int) -> None:
     except HttpError as err:
         print(err)
 while True:
-    code = input("Awaiting scan... ")
+    code = input("Awaiting scan... (Press enter to exit) ")
+
+    code = code.strip()
     #remaining code will only run when a code is scanned
-    if code == "exit" or type(code) != str or code is None or code == "": #filter out invalid inputs
+
+    try: int(code)
+    except ValueError:
+        print("Invalid input" + code)
+        continue
+    if code == "exit" or code is None or code == "" : #filter out invalid inputs
+        print("Exiting...")
         break
 
-    if checkItem(code):
+    if checkCode(code):
         print("Item found!")
         item = readItem(code)
         print(item)
         qty = input("Enter new quantity: ")
         if qty[0] in ["+", "-"]:
-            qty = qty[1:]
-            setQty(code, item.quantity + int(qty))
-        else:
-            setQty(code, int(qty))
+            qty = str(int(qty[1:]) + int(item.quantity))
+        setQty(code, str(int(qty)))
     else:
         print("Item not found in database")
         name = input("Enter name: ")
