@@ -219,6 +219,9 @@ while True:
     else:
         print("Item not found in database")
         name = input("Enter name: ")
+        if name == code:
+            print("Double scan detected")
+            continue
         category = input("Enter category: ")
         description = input("Enter description: ")
         quantity = int(input("Enter quantity: "))
