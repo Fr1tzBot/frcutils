@@ -194,10 +194,6 @@ while True:
     code = code.strip()
     #remaining code will only run when a code is scanned
 
-    try: int(code)
-    except ValueError:
-        print("Invalid input" + code)
-        continue
     if code == "exit" or code is None or code == "" : #filter out invalid inputs
         print("Exiting...")
         break
